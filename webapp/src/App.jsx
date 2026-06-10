@@ -1,6 +1,19 @@
 import { useState } from 'react'
 import './App.css'
 
+const getSafePlayUrl = (value) => {
+  try {
+    const parsed = new URL(value)
+    if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+      return parsed.toString()
+    }
+  } catch {
+    return null
+  }
+
+  return null
+}
+
 const starterGames = [
   {
     id: 1,
@@ -22,6 +35,7 @@ const starterGames = [
 
 function App() {
   const [games, setGames] = useState(starterGames)
+  const [submissionError, setSubmissionError] = useState('')
   const [formData, setFormData] = useState({
     title: '',
     author: '',
@@ -36,9 +50,18 @@ function App() {
 
   const handleSubmit = (event) => {
     event.preventDefault()
+    const safePlayUrl = getSafePlayUrl(formData.playUrl)
+
+    if (!safePlayUrl) {
+      setSubmissionError('Play URL must start with http:// or https://')
+      return
+    }
+
+    setSubmissionError('')
     setGames((current) => [
       {
         ...formData,
+        playUrl: safePlayUrl,
         id: Date.now(),
         notes: 'New student submission',
       },
@@ -162,6 +185,11 @@ function App() {
                     />
                   </div>
                   <div className="col-12">
+                    {submissionError ? (
+                      <div className="alert alert-warning py-2 mb-3" role="alert">
+                        {submissionError}
+                      </div>
+                    ) : null}
                     <button type="submit" className="btn btn-success w-100">
                       Publish submission
                     </button>

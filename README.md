@@ -5,12 +5,12 @@ It focuses on publishing student game submissions and letting classmates quickly
 
 ## Web app
 
-The web application lives in `/home/runner/work/gameglass/gameglass/KubMakCZ/gameglass/webapp`.
+The web application lives in `webapp/`.
 
 ### Run locally
 
 ```bash
-cd /home/runner/work/gameglass/gameglass/KubMakCZ/gameglass/webapp
+cd webapp
 npm install
 npm run dev
 ```
@@ -18,7 +18,7 @@ npm run dev
 ### Build and lint
 
 ```bash
-cd /home/runner/work/gameglass/gameglass/KubMakCZ/gameglass/webapp
+cd webapp
 npm run lint
 npm run build
 ```
