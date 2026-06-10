@@ -75,6 +75,13 @@ function App() {
     })
   }
 
+  const handlePlay = (playUrl) => {
+    const safePlayUrl = getSafePlayUrl(playUrl)
+    if (safePlayUrl) {
+      window.open(safePlayUrl, '_blank', 'noopener,noreferrer')
+    }
+  }
+
   return (
     <div className="bg-body-tertiary min-vh-100 py-4">
       <main className="container">
@@ -107,14 +114,13 @@ function App() {
                       </div>
                       <p className="mb-2 text-secondary small">By {game.author}</p>
                       <p className="mb-3 small">{game.notes}</p>
-                      <a
+                      <button
+                        type="button"
                         className="btn btn-sm btn-primary"
-                        href={game.playUrl}
-                        target="_blank"
-                        rel="noreferrer"
+                        onClick={() => handlePlay(game.playUrl)}
                       >
                         Play game
-                      </a>
+                      </button>
                     </article>
                   ))}
                 </div>
