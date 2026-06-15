@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/gamepad-2.svg" width="120" alt="GameGlass Logo" />
+  <img src="webapp/public/logo.jpg" width="120" alt="GameGlass Logo" style="border-radius: 20px; box-shadow: 0 0 20px rgba(255,107,107,0.5);" />
   <h1>🎮 GameGlass Portal</h1>
   <p><strong>Univerzální školní Game Jam platforma pro běh (zatím) Python her přímo v prohlížeči.</strong></p>
   
@@ -34,6 +34,14 @@ Místo toho, aby si učitelé nebo spolužáci museli stahovat desítky `.zip` s
   - `Ren'Py Web` (Emscripten port)
 
 > *Poznámka: Aplikace je plně koncipována k lokálnímu nasazení ve školních sítích (např. na Proxmox serveru).*
+
+## 📚 Dokumentace a Návody
+
+V kořenovém adresáři repozitáře naleznete podrobné návody pro učitele a správce sítě:
+
+- 📖 [**Návod k instalaci (first_install.md)**](first_install.md) - Kompletní postup nasazení Appwrite a Frontendu (např. na Proxmox pomocí Dockeru), včetně pravidel pro studenty.
+- 📦 [**Jak vydávat verze (how_to_release.md)**](how_to_release.md) - Návod, jak na GitHubu tvořit nové Releases.
+- 🔄 **Automatický Updater (`update.sh`)** - Připravený skript pro produkční servery, který jedním příkazem stáhne novou verzi z GitHubu a restartuje Docker kontejnery.
 
 ## 📦 Jak spustit lokálně pro vývoj
 
