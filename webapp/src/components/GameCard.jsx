@@ -1,4 +1,4 @@
-import { Play, Gamepad2, Download, Trash, Github } from 'lucide-react';
+import { Play, Gamepad2, Download, Trash, Code } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { storage, databases, DB_ID, COLLECTION_ID, BUCKET_ZIPS_ID } from '../lib/appwrite';
 import { useState } from 'react';
@@ -96,7 +96,7 @@ export default function GameCard({ id, title, author, type, zipFileId, gitUrl, i
                 className="btn-secondary py-2 px-3 text-xs flex items-center justify-center"
                 title="Zdrojový kód na GitHubu/GitLabu"
               >
-                <Github size={14} />
+                <Code size={14} />
               </a>
             )}
           </div>
