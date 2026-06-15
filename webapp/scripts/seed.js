@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { ZipArchive } from 'archiver';
-import { Client, Databases, Storage, ID } from 'node-appwrite';
+import { Client, Databases, Storage, ID, Permission, Role } from 'node-appwrite';
 import { InputFile } from 'node-appwrite/file';
 import dotenv from 'dotenv';
 
@@ -51,11 +51,9 @@ function zipSpecificPaths(pathsToZip, outPath, rootPath) {
 
             const stat = fs.statSync(fullPath);
             if (stat.isDirectory()) {
-                // Přidá složku do ZIPu, ale pod jejím vlastním jménem (např. 'assets/')
                 const dirName = path.basename(itemPath);
                 archive.directory(fullPath, dirName);
             } else {
-                // Přidá soubor
                 archive.file(fullPath, { name: path.basename(itemPath) });
             }
         }
@@ -64,6 +62,13 @@ function zipSpecificPaths(pathsToZip, outPath, rootPath) {
     });
 }
 
+const anyPermissions = [
+    Permission.read(Role.any()),
+    Permission.create(Role.any()),
+    Permission.update(Role.any()),
+    Permission.delete(Role.any())
+];
+
 async function setupAppwrite() {
     console.log('🚀 Inicializuji strukturu Appwrite...');
 
@@ -71,10 +76,10 @@ async function setupAppwrite() {
     try {
         await storage.getBucket(BUCKET_ZIPS_ID);
         console.log('✅ Bucket "games_zips" už existuje. Zvyšuji jeho povolenou velikost na 500 MB...');
-        await storage.updateBucket(BUCKET_ZIPS_ID, 'Games ZIPs', undefined, undefined, undefined, 500000000);
+        await storage.updateBucket(BUCKET_ZIPS_ID, 'Games ZIPs', anyPermissions, undefined, undefined, 500000000);
     } catch {
         console.log('📦 Vytvářím bucket "games_zips" s limitem 500 MB...');
-        await storage.createBucket(BUCKET_ZIPS_ID, 'Games ZIPs', undefined, undefined, undefined, 500000000);
+        await storage.createBucket(BUCKET_ZIPS_ID, 'Games ZIPs', anyPermissions, undefined, undefined, 500000000);
     }
 
     // 2. Databáze
@@ -92,7 +97,7 @@ async function setupAppwrite() {
         console.log('✅ Kolekce "games" už existuje.');
     } catch {
         console.log('🗂️ Vytvářím kolekci "games"...');
-        await databases.createCollection(DB_ID, COLLECTION_ID, 'Games');
+        await databases.createCollection(DB_ID, COLLECTION_ID, 'Games', anyPermissions);
         
         console.log('📝 Přidávám atributy do tabulky (počkám 3 vteřiny na propsání)...');
         await databases.createStringAttribute(DB_ID, COLLECTION_ID, 'title', 255, true);

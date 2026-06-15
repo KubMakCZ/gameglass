@@ -1,9 +1,9 @@
-import { Play, Gamepad2, Download, Trash } from 'lucide-react';
+import { Play, Gamepad2, Download, Trash, Github } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { storage, databases, DB_ID, COLLECTION_ID, BUCKET_ZIPS_ID } from '../lib/appwrite';
 import { useState } from 'react';
 
-export default function GameCard({ id, title, author, type, zipFileId, isOwned, onDelete }) {
+export default function GameCard({ id, title, author, type, zipFileId, gitUrl, isOwned, onDelete }) {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const typeLabels = {
@@ -32,7 +32,6 @@ export default function GameCard({ id, title, author, type, zipFileId, isOwned, 
 
     setIsDeleting(true);
     try {
-      // Nejprve zkusíme smazat soubor ze storage, pokud existuje
       if (zipFileId) {
         try {
           await storage.deleteFile(BUCKET_ZIPS_ID, zipFileId);
@@ -41,10 +40,8 @@ export default function GameCard({ id, title, author, type, zipFileId, isOwned, 
         }
       }
       
-      // Smazání záznamu z databáze
       await databases.deleteDocument(DB_ID, COLLECTION_ID, id);
       
-      // Oznámíme rodiči, ať hru vyhodí ze zobrazení
       if (onDelete) onDelete();
       
     } catch (err) {
@@ -82,13 +79,27 @@ export default function GameCard({ id, title, author, type, zipFileId, isOwned, 
           <p className="text-tickle-muted text-sm font-sans truncate">od <span className="text-tickle-text/80">{author}</span></p>
         </div>
         <div className="mt-auto flex justify-between items-center gap-2">
-          <button 
-            onClick={handleDownload}
-            disabled={!zipFileId}
-            className="btn-secondary py-2 px-4 text-xs disabled:opacity-50"
-          >
-            <Download size={14} className="mr-1 inline-block" /> ZIP
-          </button>
+          <div className="flex gap-2">
+            <button 
+              onClick={handleDownload}
+              disabled={!zipFileId}
+              className="btn-secondary py-2 px-3 text-xs disabled:opacity-50"
+              title="Stáhnout ZIP"
+            >
+              <Download size={14} />
+            </button>
+            {gitUrl && (
+              <a 
+                href={gitUrl} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="btn-secondary py-2 px-3 text-xs flex items-center justify-center"
+                title="Zdrojový kód na GitHubu/GitLabu"
+              >
+                <Github size={14} />
+              </a>
+            )}
+          </div>
           <Link to={`/play/${id}`} className="btn-primary py-2 px-4 text-xs flex items-center gap-1">
             <Play size={14} /> Hrát
           </Link>

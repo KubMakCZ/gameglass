@@ -18,7 +18,8 @@ export default function Home() {
           title: doc.title,
           author: doc.author,
           type: doc.type,
-          zipFileId: doc.zip_file_id
+          zipFileId: doc.zip_file_id,
+          gitUrl: doc.git_url
         }));
         
         setGames(fetchedGames);
@@ -71,6 +72,7 @@ export default function Home() {
                   author={game.author}
                   type={game.type}
                   zipFileId={game.zipFileId}
+                  gitUrl={game.gitUrl}
                   isOwned={isOwned}
                   onDelete={() => setGames(games.filter(g => g.id !== game.id))}
                 />

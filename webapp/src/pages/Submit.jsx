@@ -12,7 +12,7 @@ export default function Submit() {
     name: '',
     author: '',
     type: 'pygame',
-    gitUrl: ''
+    git_url: ''
   });
   
   const [file, setFile] = useState(null);
@@ -45,7 +45,8 @@ export default function Submit() {
           title: formData.name,
           author: formData.author,
           type: formData.type,
-          zip_file_id: uploadedFile.$id
+          zip_file_id: uploadedFile.$id,
+          git_url: formData.git_url
         }
       );
 
@@ -57,7 +58,7 @@ export default function Submit() {
       }
 
       setSuccess(true);
-      setFormData({ name: '', author: '', type: 'pygame' });
+      setFormData({ name: '', author: '', type: 'pygame', git_url: '' });
       setFile(null);
     } catch (err) {
       console.error(err);
@@ -162,12 +163,21 @@ export default function Submit() {
               </div>
             </div>
 
-
+            <div className="flex flex-col gap-2">
+              <label className="text-xs font-bold text-tickle-muted uppercase tracking-wider">Odkaz na Git <span className="lowercase normal-case font-normal">(Volitelné)</span></label>
+              <input 
+                type="url" 
+                value={formData.git_url}
+                onChange={(e) => setFormData({...formData, git_url: e.target.value})}
+                className="input-field" 
+                placeholder="https://github.com/..." 
+              />
+            </div>
 
             <button 
               type="submit" 
-              disabled={isSubmitting}
-              className="btn-primary w-full mt-4 py-4 text-lg disabled:opacity-50 flex justify-center items-center gap-2"
+              disabled={isSubmitting || !file || !formData.name || !formData.author}
+              className="btn-primary w-full py-4 text-lg font-bold flex items-center justify-center gap-2 mt-4"
             >
               {isSubmitting ? (
                 <>
