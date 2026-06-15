@@ -8,6 +8,7 @@ export default function ConsolePlayer({ game }) {
   const [status, setStatus] = useState('Inicializace...');
   const [isWaitingForInput, setIsWaitingForInput] = useState(false);
   const [inputValue, setInputValue] = useState('');
+  const [showSwTutorial, setShowSwTutorial] = useState(false);
   const pyodideStarted = useRef(false);
 
   const writeOutput = (text, isError = false) => {
@@ -54,6 +55,7 @@ export default function ConsolePlayer({ game }) {
         .catch((err) => {
           console.error('Chyba registrace ServiceWorkeru:', err);
           writeln('[CHYBA] Nepodařilo se nastavit Service Worker.', true);
+          setShowSwTutorial(true);
         });
 
       // Posloucháme zprávy od ServiceWorkeru (žádost o vstup)
@@ -68,6 +70,7 @@ export default function ConsolePlayer({ game }) {
       });
     } else {
       writeln('[CHYBA] Váš prohlížeč nepodporuje Service Workery.', true);
+      setShowSwTutorial(true);
       return;
     }
 
@@ -188,10 +191,48 @@ export default function ConsolePlayer({ game }) {
         </div>
       </div>
       
-      <div className="flex-grow flex flex-col p-4 bg-[#0d1117] overflow-y-auto">
+      <div className="flex-grow flex flex-col p-4 bg-[#0d1117] overflow-y-auto relative">
+        
+        {showSwTutorial && (
+          <div className="absolute inset-4 bg-[#0d1117]/95 backdrop-blur-md border border-[#ff5f56] rounded-xl p-6 overflow-y-auto flex flex-col z-10 shadow-2xl">
+            <h2 className="text-xl font-bold text-[#ff5f56] mb-4">⚠️ Zablokovaný přístup (Bezpečnostní omezení prohlížeče)</h2>
+            <p className="text-[#c9d1d9] mb-4 text-sm leading-relaxed">
+              Tato konzolová hra vyžaduje pro běh tzv. <strong>Service Workery</strong>. Tyto komponenty jsou prohlížeči blokovány, pokud web neběží na zabezpečeném protokolu (HTTPS) nebo na localhostu. Protože jste pravděpodobně přistoupili k portálu přes nezabezpečenou lokální IP adresu, prohlížeč to zablokoval.
+            </p>
+            <h3 className="text-white font-bold mb-2 mt-2">Rychlé řešení (přidání výjimky v prohlížeči):</h3>
+            <ul className="text-[#c9d1d9] text-sm space-y-3 pl-0 list-none font-sans">
+              <li className="bg-white/5 p-3 rounded border border-white/10">
+                <strong className="text-white block mb-1">🌍 Google Chrome / Brave:</strong>
+                1. Napište do adresního řádku: <code className="bg-black/50 text-[#ffbd2e] px-1 rounded select-all">chrome://flags/#unsafely-treat-insecure-origin-as-secure</code><br/>
+                2. Do vyhledávacího pole vložte aktuální IP adresu tohoto portálu (např. <code>http://172.26.x.x</code>).<br/>
+                3. Změňte hodnotu z <i>Disabled</i> na <b>Enabled</b> a restartujte prohlížeč.
+              </li>
+              <li className="bg-white/5 p-3 rounded border border-white/10">
+                <strong className="text-white block mb-1">🌊 Microsoft Edge:</strong>
+                Stejný postup jako u Chrome, jen do adresního řádku napište: <code className="bg-black/50 text-[#ffbd2e] px-1 rounded select-all">edge://flags/#unsafely-treat-insecure-origin-as-secure</code>
+              </li>
+              <li className="bg-white/5 p-3 rounded border border-white/10">
+                <strong className="text-white block mb-1">🦊 Mozilla Firefox:</strong>
+                1. Otevřete: <code className="bg-black/50 text-[#ffbd2e] px-1 rounded select-all">about:config</code> a přijměte riziko.<br/>
+                2. Vyhledejte: <code>dom.serviceWorkers.testing.enabled</code><br/>
+                3. Dvojklikem změňte na <b>true</b>. Následně zrušte Private mode.
+              </li>
+              <li className="bg-white/5 p-3 rounded border border-white/10">
+                <strong className="text-white block mb-1">🍎 Safari:</strong>
+                Safari obecně nepodporuje Service Workery nad HTTP. Pro Safari musí administrátor zprovoznit HTTPS (např. přes interní DNS a Let's Encrypt).
+              </li>
+            </ul>
+            <div className="mt-6 pt-4 border-t border-white/10">
+              <p className="text-xs text-tickle-muted">
+                <strong>💡 Tip pro administrátory:</strong> Trvalé řešení bez nutnosti tohoto nastavování u žáků je vygenerovat na serveru (např. v NGINX) SSL certifikát a přistupovat na portál vždy přes `https://`.
+              </p>
+            </div>
+          </div>
+        )}
+
         <pre 
           ref={outputRef} 
-          className="font-mono text-sm text-[#c9d1d9] whitespace-pre-wrap break-words"
+          className={`font-mono text-sm text-[#c9d1d9] whitespace-pre-wrap break-words ${showSwTutorial ? 'opacity-20 blur-sm' : ''}`}
         ></pre>
         
         {isWaitingForInput && (

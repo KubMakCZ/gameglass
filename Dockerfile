@@ -26,6 +26,13 @@ RUN echo 'server { \
     root   /usr/share/nginx/html; \
     include /etc/nginx/mime.types; \
     \
+    # ⚡ OPTIMALIZACE VÝKONU (GZIP komprese pro rychlejší stahování JavaScriptu a assetů) \
+    gzip on; \
+    gzip_vary on; \
+    gzip_min_length 1024; \
+    gzip_proxied expired no-cache no-store private auth; \
+    gzip_types text/plain text/css text/xml text/javascript application/x-javascript application/xml application/javascript; \
+    \
     location / { \
         index  index.html index.htm; \
         try_files $uri $uri/ /index.html; \

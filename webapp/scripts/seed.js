@@ -104,6 +104,7 @@ async function setupAppwrite() {
         await databases.createStringAttribute(DB_ID, COLLECTION_ID, 'author', 255, true);
         await databases.createStringAttribute(DB_ID, COLLECTION_ID, 'type', 50, true);
         await databases.createStringAttribute(DB_ID, COLLECTION_ID, 'zip_file_id', 255, true);
+        await databases.createUrlAttribute(DB_ID, COLLECTION_ID, 'git_url', false);
         
         // Appwrite vytváří atributy asynchronně, je dobré chvíli počkat
         await new Promise(res => setTimeout(res, 3000));
@@ -175,7 +176,8 @@ async function seedGames() {
             title: game.title,
             author: game.author,
             type: game.type,
-            zip_file_id: file.$id
+            zip_file_id: file.$id,
+            git_url: 'https://github.com/KubMakCZ/gameglass'
         });
 
         console.log(`✅ ${game.title} úspěšně zpracována!`);
