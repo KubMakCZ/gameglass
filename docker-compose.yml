@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  gameglass-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gameglass-web
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    # Proměnné se přenesou do buildu z lokálního webapp/.env
+    # Pokud by byly potřeba definovat natvrdo (nedoporučuje se z bezpečnostních důvodů)
+    # environment:
+    #   - VITE_APPWRITE_ENDPOINT=http://ip/v1
+    #   - VITE_APPWRITE_PROJECT_ID=123

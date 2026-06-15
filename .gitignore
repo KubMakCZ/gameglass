@@ -141,3 +141,12 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# AI / Notes and Screenshots
+
+appwrite_setup.md
+gamejam_portal_plan.md
+poznamka.txt
+*.png
+
+webapp/temp_zips/

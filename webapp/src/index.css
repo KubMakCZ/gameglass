@@ -1,6 +1,50 @@
-body {
-  margin: 0;
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-  background: #f8f9fa;
-  color: #212529;
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Silkscreen&family=DM+Mono&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-tickle-bg text-tickle-text font-sans min-h-screen antialiased;
+    /* Subtilní vzor z Tickle */
+    background-image:
+      linear-gradient(rgba(255,107,107,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,107,107,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display tracking-wide;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-tickle-accent hover:bg-tickle-accentHover text-white px-6 py-3 rounded font-bold shadow-[0_0_15px_rgba(255,107,107,0.3)] transition-all hover:shadow-[0_0_25px_rgba(255,107,107,0.5)] hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2;
+  }
+  
+  .btn-secondary {
+    @apply bg-tickle-raised border border-tickle-border hover:border-tickle-accent text-tickle-text px-6 py-3 rounded font-bold transition-all flex items-center justify-center gap-2;
+  }
+
+  .input-field {
+    @apply w-full bg-tickle-bg border border-tickle-border rounded px-4 py-3 text-tickle-text focus:outline-none focus:border-tickle-accent focus:ring-1 focus:ring-tickle-accent transition-all placeholder-tickle-muted;
+  }
+
+  .glass-card {
+    @apply bg-tickle-card border border-tickle-border rounded-lg shadow-lg hover:bg-tickle-cardHover hover:border-tickle-accent/50 transition-all duration-300;
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-tickle-bg;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-tickle-border rounded-full hover:bg-tickle-muted;
 }

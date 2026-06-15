@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pygame Web Player</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        canvas {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            outline: none;
+        }
+        #status {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #c9d1d9;
+            font-family: sans-serif;
+            font-size: 1.2rem;
+            pointer-events: none;
+        }
+    </style>
+    <!-- Pyodide se načte přímo z pygbag hostingu -->
+    <script src="https://pygame-web.github.io/archives/0.9/pyodide.js"></script>
+</head>
+<body>
+    <div id="status">Spouštím Pygame Engine...</div>
+    <canvas id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
+    
+    <script type="application/javascript">
+        const urlParams = new URLSearchParams(window.location.search);
+        const apkUrl = urlParams.get('apk');
+
+        if (!apkUrl) {
+            document.getElementById('status').innerText = "Chyba: Chybí zdrojový archiv (APK)";
+            document.getElementById('status').style.color = "#ff6b6b";
+        } else {
+            var Module = {
+                canvas: document.getElementById('canvas'),
+                setStatus: function(text) {
+                    const statusEl = document.getElementById('status');
+                    if (statusEl) {
+                        if (text) {
+                            statusEl.innerText = text;
+                        } else {
+                            statusEl.style.display = 'none'; // Skryje status jakmile je načteno
+                        }
+                    }
+                }
+            };
+
+            window.config = {
+                archive: apkUrl, // Tady mu podstrčíme náš upravený ZIP s main.py
+                title: "GameGlass",
+                xtermjs: "0", // Vypneme overlay terminál
+                autorun: 1
+            };
+
+            var script = document.createElement('script');
+            script.src = "https://pygame-web.github.io/archives/0.9/browser.js";
+            document.body.appendChild(script);
+        }
+    </script>
+</body>
+</html>
