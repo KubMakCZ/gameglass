@@ -25,6 +25,16 @@ export default function PygamePlayer({ game }) {
         await originalZip.loadAsync(buffer);
         
         const newZip = new JSZip();
+        
+        // 1. Zjistíme, jestli student nepoužil přímo main.py
+        let studentHasMainPy = false;
+        for (const [relativePath, zipEntry] of Object.entries(originalZip.files)) {
+          if (!zipEntry.dir && relativePath.toLowerCase() === 'main.py') {
+            studentHasMainPy = true;
+            break;
+          }
+        }
+
         let mainPyFound = false;
 
         for (const [relativePath, zipEntry] of Object.entries(originalZip.files)) {
@@ -33,13 +43,21 @@ export default function PygamePlayer({ game }) {
           const isPythonScript = relativePath.endsWith('.py');
           const isInRoot = !relativePath.includes('/');
           
-          if (isPythonScript && isInRoot && !mainPyFound) {
-            const content = await zipEntry.async('uint8array');
-            newZip.file('main.py', content);
-            mainPyFound = true;
-          } else {
+          if (studentHasMainPy) {
+            // Pokud student ma main.py, jen prekopirujeme soubory a nedelame rename hack
             const content = await zipEntry.async('uint8array');
             newZip.file(relativePath, content);
+            if (relativePath.toLowerCase() === 'main.py') mainPyFound = true;
+          } else {
+            // Jinak vezmeme prvni root python skript a udelame z nej main.py
+            if (isPythonScript && isInRoot && !mainPyFound) {
+              const content = await zipEntry.async('uint8array');
+              newZip.file('main.py', content);
+              mainPyFound = true;
+            } else {
+              const content = await zipEntry.async('uint8array');
+              newZip.file(relativePath, content);
+            }
           }
         }
 
