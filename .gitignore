@@ -148,6 +148,16 @@ appwrite_setup.md
 gamejam_portal_plan.md
 poznamka.txt
 *.png
+how_to_release.md
+
+# Ren'Py compiled files and saves
+*.rpyc
+*.rpyb
+saves/
+cache/
+log.txt
+traceback.txt
+progressive_download.txt
 
 webapp/temp_zips/
 
